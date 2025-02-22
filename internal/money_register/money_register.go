@@ -8,10 +8,12 @@ import (
 type MoneyRegister struct {
 }
 
-func (r *MoneyRegister) MakePayment(bill *PaymentBill.Bill, PaymentMethod paymentprocessor.PaymentMethod) {
-	bill.Pay(PaymentMethod)
+func (r *MoneyRegister) MakePayment(bill *PaymentBill.Bill, PaymentMethod paymentprocessor.PaymentMethod) (string, error) {
+	message, err := bill.Pay(PaymentMethod)
+	return message, err
 }
 
-func (r *MoneyRegister) Refund(bill *PaymentBill.Bill, PaymentMethod paymentprocessor.PaymentMethod) {
-	bill.Refund(PaymentMethod)
+func (r *MoneyRegister) Refund(bill *PaymentBill.Bill, PaymentMethod paymentprocessor.PaymentMethod) (string, error) {
+	message, err := bill.Refund(PaymentMethod)
+	return message, err
 }

@@ -32,14 +32,32 @@ func main() {
 	fmt.Println("--------------------------------")
 	fmt.Println("Starting Processing payment")
 	fmt.Println("--------------------------------")
+
 	reg.MakePayment(&b, &card)
 	fmt.Println("Payment processed")
+	fmt.Println("--------------------------------")
 
 	fmt.Println("Test repeated payment")
-	reg.MakePayment(&b, &card)
+	tmp1, tmp2 := reg.MakePayment(&b, &card)
+	fmt.Println(tmp1, tmp2)
+
 	fmt.Println("--------------------------------")
 	fmt.Println("Test refund")
-	fmt.Println("--------------------------------")
+
 	reg.Refund(&b, &card)
+	fmt.Println("--------------------------------")
+	fmt.Println("Test refund on unpaid bill")
+	unpaidBill := bill.Bill{
+		ID:          1,
+		Amount:      100,
+		Description: "lorem ipsum dolor sit amet, consectetur adipis",
+		DueDate:     time.Now().Add(time.Hour),
+		Paid:        false,
+		PaymentType: &proc,
+	}
+	msg, err := reg.Refund(&unpaidBill, &card)
+	if err != nil {
+		fmt.Println(msg, err)
+	}
 
 }
