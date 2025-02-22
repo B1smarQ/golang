@@ -42,5 +42,5 @@ func (b *Bill) Refund(method paymentprocessor.PaymentMethod) (string, error) {
 	b.PaymentType.Refund(method)
 	b.Paid = false
 	b.PaymentDate = time.Time{}
-	return "", nil
+	return "Success", nil
 }

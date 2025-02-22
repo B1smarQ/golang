@@ -28,23 +28,42 @@ func main() {
 
 	reg := moneyregister.MoneyRegister{}
 
+	testPaymentAndRefund(&reg, &b, &card, &proc)
+}
+
+func testPaymentAndRefund(reg *moneyregister.MoneyRegister, b *bill.Bill, card paymentprocessor.PaymentMethod, proc *paymentprocessor.CardPaymentProcessor) {
 	fmt.Println("Bill created")
 	fmt.Println("--------------------------------")
 	fmt.Println("Starting Processing payment")
 	fmt.Println("--------------------------------")
 
-	reg.MakePayment(&b, &card)
-	fmt.Println("Payment processed")
+	msg, err := reg.MakePayment(b, card)
+	if err != nil {
+		fmt.Printf("Payment failed: %v - %v\n", msg, err)
+	} else {
+		fmt.Printf("Payment processed successfully: %v\n", msg)
+	}
 	fmt.Println("--------------------------------")
 
 	fmt.Println("Test repeated payment")
-	tmp1, tmp2 := reg.MakePayment(&b, &card)
-	fmt.Println(tmp1, tmp2)
+	msg, err = reg.MakePayment(b, card)
+	if err != nil {
+		fmt.Printf("Repeated payment failed: %v - %v\n", msg, err)
+	} else {
+		fmt.Printf("Repeated payment result: %v\n", msg)
+	}
 
 	fmt.Println("--------------------------------")
 	fmt.Println("Test refund")
 
-	reg.Refund(&b, &card)
+	msg, err = reg.Refund(b, card)
+
+	if err != nil {
+		fmt.Printf("Refund failed: %v - %v\n", msg, err)
+	} else {
+		fmt.Printf("Refund processed successfully: %v\n", msg)
+	}
+
 	fmt.Println("--------------------------------")
 	fmt.Println("Test refund on unpaid bill")
 	unpaidBill := bill.Bill{
@@ -53,11 +72,15 @@ func main() {
 		Description: "lorem ipsum dolor sit amet, consectetur adipis",
 		DueDate:     time.Now().Add(time.Hour),
 		Paid:        false,
-		PaymentType: &proc,
+		PaymentType: proc,
 	}
-	msg, err := reg.Refund(&unpaidBill, &card)
+	fmt.Println("--------------------------------")
+	msg, err = reg.Refund(&unpaidBill, card)
+
 	if err != nil {
-		fmt.Println(msg, err)
+		fmt.Printf("Refund on unpaid bill failed: %v - %v\n", msg, err)
+	} else {
+		fmt.Printf("Refund on unpaid bill result: %v\n", msg)
 	}
 
 }
