@@ -1,7 +1,7 @@
 package paymentprocessor
 
 type PaymentMethod interface {
-	getBalance() float64
+	GetBalance() float64
 	deposit(amount float64) bool
 	withdraw(amount float64) bool
 	isCard() bool
@@ -13,7 +13,7 @@ type Card struct {
 	Balance    float64
 }
 
-func (c *Card) getBalance() float64 {
+func (c *Card) GetBalance() float64 {
 	return c.Balance
 }
 
@@ -46,7 +46,7 @@ type BankAccount struct {
 	Balance       float64
 }
 
-func (ba *BankAccount) getBalance() float64 {
+func (ba *BankAccount) GetBalance() float64 {
 	return ba.Balance
 }
 
@@ -78,7 +78,7 @@ type Cash struct {
 	Balance float64
 }
 
-func (c *Cash) getBalance() float64 {
+func (c *Cash) GetBalance() float64 {
 	return c.Balance
 }
 
