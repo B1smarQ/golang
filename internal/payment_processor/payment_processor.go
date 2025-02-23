@@ -10,11 +10,11 @@ type PaymentProcessor interface {
 type CashPaymentProcessor struct {
 }
 
-func (cp *CashPaymentProcessor) Pay() {
+func (cp *CashPaymentProcessor) Pay(p PaymentMethod) {
 	fmt.Println("Paying with cash")
 }
 
-func (cp *CashPaymentProcessor) Refund() {
+func (cp *CashPaymentProcessor) Refund(p PaymentMethod) {
 	fmt.Println("Refunding cash")
 }
 
@@ -24,7 +24,7 @@ type CardPaymentProcessor struct {
 func (cp *CardPaymentProcessor) Pay(p PaymentMethod) {
 	if !cp.CheckVaditidy() {
 		fmt.Println("Invalid card")
-		return // Return early to avoid unnecessary processing
+		return
 	}
 	fmt.Println("Paying with card")
 }
@@ -36,16 +36,16 @@ func (cp *CardPaymentProcessor) Refund(p PaymentMethod) {
 func (cp *CardPaymentProcessor) CheckVaditidy() bool {
 	fmt.Println("Checking card validity")
 	fmt.Println("Verification successful")
-	return true // Replace with actual card validation logic
+	return true
 }
 
 type BankTransferPaymentProcessor struct {
 }
 
-func (cp *BankTransferPaymentProcessor) Pay() {
+func (cp *BankTransferPaymentProcessor) Pay(p PaymentMethod) {
 	fmt.Println("Paying with bank transfer")
 }
 
-func (cp *BankTransferPaymentProcessor) Refund() {
+func (cp *BankTransferPaymentProcessor) Refund(p PaymentMethod) {
 	fmt.Println("Refunding bank transfer")
 }
