@@ -34,7 +34,7 @@ func main() {
 
 	reg := moneyregister.MoneyRegister{}
 
-	testCard(&reg, &b, &card, &proc)
+	testPayment(&reg, &b, &card, &proc)
 	b = bill.Bill{
 		ID:          1,
 		Amount:      100,
@@ -45,7 +45,7 @@ func main() {
 	}
 	fmt.Println("--------------------------------")
 	fmt.Println("--------------------------------")
-	testBankAccount(&reg, &b, &bankAccount, &bankProc)
+	testPayment(&reg, &b, &bankAccount, &bankProc)
 	fmt.Println("--------------------------------")
 	fmt.Println("--------------------------------")
 	cash := paymentprocessor.Cash{
@@ -59,10 +59,10 @@ func main() {
 		Paid:        false,
 		PaymentType: &cashProc,
 	}
-	testCash(&reg, &b, &cash, &cashProc)
+	testPayment(&reg, &b, &cash, &cashProc)
 }
 
-func testCard(reg *moneyregister.MoneyRegister, b *bill.Bill, card paymentprocessor.PaymentMethod, proc *paymentprocessor.CardPaymentProcessor) {
+func testPayment(reg *moneyregister.MoneyRegister, b *bill.Bill, card paymentprocessor.PaymentMethod, proc paymentprocessor.PaymentProcessor) {
 	fmt.Println("Bill created")
 	fmt.Println("--------------------------------")
 	fmt.Println("Starting Processing payment")
@@ -114,108 +114,5 @@ func testCard(reg *moneyregister.MoneyRegister, b *bill.Bill, card paymentproces
 		fmt.Println("Refund on unpaid bill result:", msg)
 	}
 
-}
-
-func testBankAccount(reg *moneyregister.MoneyRegister, b *bill.Bill, bankAccount paymentprocessor.PaymentMethod, proc *paymentprocessor.BankTransferPaymentProcessor) {
-	fmt.Println("Bill created")
 	fmt.Println("--------------------------------")
-	fmt.Println("Starting Processing payment")
-	fmt.Println("--------------------------------")
-
-	msg, err := reg.MakePayment(b, bankAccount)
-	if err != nil {
-		fmt.Println("Payment failed:", msg, "-", err)
-	} else {
-		fmt.Println("Payment processed successfully:", msg)
-	}
-
-	fmt.Println("--------------------------------")
-	fmt.Println("Test repeated payment")
-	msg, err = reg.MakePayment(b, bankAccount)
-	if err != nil {
-		fmt.Println("Repeated payment failed:", msg, "-", err)
-	} else {
-		fmt.Println("Repeated payment result:", msg)
-	}
-
-	fmt.Println("--------------------------------")
-	fmt.Println("Test refund")
-
-	msg, err = reg.Refund(b, bankAccount)
-	if err != nil {
-		fmt.Println("Refund failed:", msg, "-", err)
-	} else {
-		fmt.Println("Refund processed successfully:", msg)
-	}
-
-	fmt.Println("--------------------------------")
-	fmt.Println("Test refund on unpaid bill")
-	unpaidBill := bill.Bill{
-		ID:          1,
-		Amount:      100,
-		Description: "lorem ipsum dolor sit amet, consectetur adipis",
-		DueDate:     time.Now().Add(time.Hour),
-		Paid:        false,
-		PaymentType: proc,
-	}
-	fmt.Println("--------------------------------")
-	msg, err = reg.Refund(&unpaidBill, bankAccount)
-
-	if err != nil {
-		fmt.Println("Refund on unpaid bill failed:", msg, "-", err)
-	} else {
-		fmt.Println("Refund on unpaid bill result:", msg)
-	}
-}
-
-func testCash(reg *moneyregister.MoneyRegister, b *bill.Bill, cash paymentprocessor.PaymentMethod, proc *paymentprocessor.CashPaymentProcessor) {
-	fmt.Println("Bill created")
-	fmt.Println("--------------------------------")
-	fmt.Println("Starting Processing payment")
-	fmt.Println("--------------------------------")
-
-	msg, err := reg.MakePayment(b, cash)
-	if err != nil {
-		fmt.Println("Payment failed:", msg, "-", err)
-	} else {
-		fmt.Println("Payment processed successfully:", msg)
-	}
-
-	fmt.Println("--------------------------------")
-	fmt.Println("Test repeated payment")
-	msg, err = reg.MakePayment(b, cash)
-	if err != nil {
-		fmt.Println("Repeated payment failed:", msg, "-", err)
-	} else {
-		fmt.Println("Repeated payment result:", msg)
-	}
-
-	fmt.Println("--------------------------------")
-	fmt.Println("Test refund")
-
-	msg, err = reg.Refund(b, cash)
-	if err != nil {
-		fmt.Println("Refund failed:", msg, "-", err)
-	} else {
-		fmt.Println("Refund processed successfully:", msg)
-	}
-
-	fmt.Println("--------------------------------")
-	fmt.Println("Test refund on unpaid bill")
-	unpaidBill := bill.Bill{
-		ID:          1,
-		Amount:      100,
-		Description: "lorem ipsum dolor sit amet, consectetur adipis",
-		DueDate:     time.Now().Add(time.Hour),
-		Paid:        false,
-		PaymentType: proc,
-	}
-	fmt.Println("--------------------------------")
-	msg, err = reg.Refund(&unpaidBill, cash)
-
-	if err != nil {
-		fmt.Println("Refund on unpaid bill failed:", msg, "-", err)
-	} else {
-		fmt.Println("Refund on unpaid bill result:", msg)
-	}
 }
