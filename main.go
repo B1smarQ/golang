@@ -94,15 +94,9 @@ func testPayment(reg *moneyregister.MoneyRegister, b *bill.Bill, card paymentpro
 
 	fmt.Println("--------------------------------")
 	fmt.Println("Test refund on unpaid bill")
-	unpaidBill := bill.Bill{
-		ID:          1,
-		Amount:      100,
-		Description: "lorem ipsum dolor sit amet, consectetur adipis",
-		DueDate:     time.Now().Add(time.Hour),
-		Paid:        false,
-	}
+	b.Paid = false
 	fmt.Println("--------------------------------")
-	msg, err = reg.Refund(&unpaidBill, card, proc)
+	msg, err = reg.Refund(b, card, proc)
 
 	if err != nil {
 		fmt.Println("Refund on unpaid bill failed:", msg, "-", err)
